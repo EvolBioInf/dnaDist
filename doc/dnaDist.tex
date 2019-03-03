@@ -8,6 +8,7 @@
 \usepackage{babel}
 \usepackage[nodayofweek]{datetime}
 \usepackage[round]{natbib}
+\newcommand{\ty}{\texttt}
 \bibliographystyle{plainnat}
 \oddsidemargin=0cm
 \evensidemargin=0cm
@@ -15,22 +16,40 @@
 \textheight=23cm
 \begin{document}
 
-\title{\texttt{dnaDist} \input{version}: \emph{Description}}
+\title{\texttt{dnaDist} \input{version}: Compute Evolutionary
+  Distances between DNA Sequences}
 \author{\input{author}}
 \input{date}
 \date{\displaydate{tagDate}}
 \maketitle
 
 \section{Introduction} 
-\emph{Introduction}
+Given a set of aligned DNA sequences in FASTA format, \ty{dnaDist}
+computes the evolutionary distance between all pairs. There is a
+choice between two types of distances, raw and the default
+Jukes-Cantor. Raw distances, $d$, are the number of differences between two
+sequences divided by the number of nucleotides compared. The
+Jukes-Cantor distance, $K$, corrects this raw distance for
+multiple mutations \citep{juk69:evo}:
+\[
+K=-\frac{3}{4}\log\left(1-\frac{4}{3}d\right).
+\]
+$K$ is also known as the number of substitutions per site and is
+always greater or equal to $d$. The output of \ty{dnaDist} is in
+PHYLIP format \citep{fel05:phy}.
+
+In addition to straight forward distance computation, \ty{dnaDist}
+also implements two types of bootstrap analysis. The ``classical''
+bootstrap by \cite{fel85:con} and the pairwise bootstrap
+by \cite{klo16:sup}. 
 
 \section{Getting Started}
-The program \texttt{dnaDist} was written in C on a computer running Linux.
+\texttt{DnaDist} was written in C on a computer running Linux.
 Please contact \texttt{\input{email}} if there are any problems
 with the program.
 \begin{itemize}
 \item Obtain the package\\
-\texttt{git clone https://www.github.com/\input{repo}/dnaDist}
+\texttt{git clone https://www.github.com/evolbioinf/dnaDist}
 \item Change into the directory just downloaded
 \begin{verbatim}
 cd dnaDist
@@ -57,13 +76,72 @@ doc/dnaDist.pdf
 \end{verbatim}
 \end{itemize}
 
+\section{Tutorial}
+\begin{itemize}
+\item Run the default distance estimation to compute the number of
+  substitutions per site
+\begin{verbatim}
+dnaDist data/test.fa 
+2
+S1        0.000000 0.010067
+S2        0.010067 0.000000
+\end{verbatim}
+\item To get the underlying number of mismatches
+  per site, use the \ty{-r} switch
+\begin{verbatim}
+dnaDist -r data/test.fa 
+2
+S1        0.000000 0.010000
+S2        0.010000 0.000000
+\end{verbatim}
+Notice that the number of mismatches is slightly smaller than the
+number of substitutions.
+\item Compute distances from a single bootstrap replicate of the input alignment \citep{fel85:con}
+\begin{verbatim}
+dnaDist -s 13 -b 1 data/test.fa 
+2
+S1        0.000000 0.014132
+S2        0.014132 0.000000
+\end{verbatim}
+The \ty{-s} option sets the seed for the random number generator to
+ensure numerically identical results for testing. By default, the seed
+is generated internally to ensure independence of runs. Also, in a
+proper bootstrap analysis the number of replicates would be, say,
+$10^4$.
+\item We can also get the uncorrected raw distance for the bootstrap
+  replicate:
+\begin{verbatim}
+dnaDist -r -s 13 -b 1 data/test.fa 
+2
+S1        0.000000 0.010000
+S2        0.010000 0.000000
+\end{verbatim}
+\item Compute one set of distances with pairwise bootstrapping
+  \citep{klo16:sup}:
+\begin{verbatim}
+dnaDist -s 13 -p 1 data/test.fa 
+2
+S1        0.000000 0.012097
+S2        0.012097 0.000000
+\end{verbatim}
+\item And again, \ty{-r} gives us the slightly smaller corresponding
+  uncorrected result:
+\begin{verbatim}
+dnaDist -r -s 13 -p 1 data/test.fa 
+dnaDist -r -s 13 -p 1 data/test.fa 
+2
+S1        0.000000 0.011000
+S2        0.011000 0.000000
+\end{verbatim}
+\end{itemize}
+
 \section{Change Log}
 Please use
 \begin{verbatim}
 git log
 \end{verbatim}
-to list the change history of this program.
+to list the change history.
 
-%% \bibliography{ref}
+\bibliography{ref}
 \end{document}
 

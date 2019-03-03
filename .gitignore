@@ -8,3 +8,6 @@ doc/*.pdf
 doc/date.tex
 doc/version.tex
 src/dnaDist
+genTest.sh
+valgrind.sh
+*.val

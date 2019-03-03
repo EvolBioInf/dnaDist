@@ -18,7 +18,10 @@ Args *newArgs() {
   args->h   = 0;
   args->v   = 0;
   args->err = 0;
-  args->i   = DEFAULT_I;
+  args->b   = 0;
+  args->p   = 0;
+  args->r   = 0;
+  args->s   = 0;
   return args;
 }
 
@@ -28,13 +31,22 @@ void freeArgs(Args *args) {
 
 Args *getArgs(int argc, char *argv[]) {
   int c;
-  char *optString = "hvi:";
+  char *optString = "hvrb:p:s:";
   Args *args = newArgs();
 
   while ((c = getopt(argc, argv, optString)) != -1) {
     switch(c) {
-    case 'i': /* iterations */
-      args->i = atoi(optarg);
+    case 'b': /* bootstrap replicates */
+      args->b = atoi(optarg);
+      break;
+    case 'p': /* pairwise bootstrap replicates */
+      args->p = atoi(optarg);
+      break;
+    case 's': /* seed for random number generator */
+      args->s = atoi(optarg);
+      break;
+    case 'r': /* raw distances */
+      args->r = 1;
       break;
     case 'h': /* help       */
       args->h = 1;
@@ -63,10 +75,13 @@ Args *getArgs(int argc, char *argv[]) {
 
 void printUsage() {
   printf("Usage: %s [options] [inputFiles]\n", progname());
-  printf("<DESCRIPTION>\n");
-  printf("Example: %s -i 2\n", progname());
+  printf("Jukes-Cantor distances between DNA sequences\n");
+  printf("Example: %s -b 10000 alignment.fasta\n", progname());
   printf("Options:\n");
-  printf("\t[-i <NUM> iterations; default: %d]\n", DEFAULT_I);
+  printf("\t[-b <NUM> bootstrap replicates; default: no bootstrap]\n");
+  printf("\t[-p <NUM> pairwise bootstrap replicates; default: no pairwise bootstrap]\n");
+  printf("\t[-s <NUM> seed for random number generator; default: system]\n");
+  printf("\t[-r raw distances; default: Jukes-Cantor]\n");
   printf("\t[-h print this help message and exit]\n");
   printf("\t[-v print version & program information and exit]\n");
   exit(0);

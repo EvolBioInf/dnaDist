@@ -1,3 +1,3 @@
-valgrind --track-origins=yes --leak-check=full --show-leak-kinds=all --log-file="dnaDist.val" --dsymutil=yes ./dnaDist
+valgrind --track-origins=yes --leak-check=full --show-leak-kinds=all --log-file="dnaDist.val" --dsymutil=yes ./dnaDist ../data/test.fa
 
 
