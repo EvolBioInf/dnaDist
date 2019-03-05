@@ -87,15 +87,22 @@ S1        0.000000 0.010067
 S2        0.010067 0.000000
 \end{verbatim}
 \item To get the underlying number of mismatches
-  per site, use the \ty{-r} switch
+  per site, use \ty{-r 1} switch
 \begin{verbatim}
-dnaDist -r data/test.fa 
+dnaDist -r 1 data/test.fa 
 2
 S1        0.000000 0.010000
 S2        0.010000 0.000000
 \end{verbatim}
 Notice that the number of mismatches is slightly smaller than the
 number of substitutions.
+\item Similarly, to get the total number of mismatches,
+\begin{verbatim}
+./build/dnaDist -r 2 data/test.fa 
+2
+S1        0 10
+S2        10 0
+\end{verbatim}
 \item Compute distances from a single bootstrap replicate of the input alignment \citep{fel85:con}
 \begin{verbatim}
 dnaDist -s 13 -b 1 data/test.fa 
@@ -124,11 +131,10 @@ dnaDist -s 13 -p 1 data/test.fa
 S1        0.000000 0.012097
 S2        0.012097 0.000000
 \end{verbatim}
-\item And again, \ty{-r} gives us the slightly smaller corresponding
+\item And again, \ty{-r 1} gives us the slightly smaller corresponding
   uncorrected result:
 \begin{verbatim}
-dnaDist -r -s 13 -p 1 data/test.fa 
-dnaDist -r -s 13 -p 1 data/test.fa 
+dnaDist -r 1 -s 13 -p 1 data/test.fa 
 2
 S1        0.000000 0.011000
 S2        0.011000 0.000000

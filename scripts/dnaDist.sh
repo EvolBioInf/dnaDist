@@ -8,13 +8,23 @@ else
     echo ${DIFF}
 fi
 
-./dnaDist -r ../data/test.fa > tmp.out
-DIFF=$(diff tmp.out ../data/dnaDistR.out)
+./dnaDist -r 1 ../data/test.fa > tmp.out
+DIFF=$(diff tmp.out ../data/dnaDistR1.out)
 if [ "$DIFF" == "" ] 
 then
-    printf "Test(dnaDist, -r)\tpass\n"
+    printf "Test(dnaDist, -r 1)\tpass\n"
 else
-    printf "Test(dnaDist, -r)\tfail\n"
+    printf "Test(dnaDist, -r 1)\tfail\n"
+    echo ${DIFF}
+fi
+
+./dnaDist -r 2 ../data/test.fa > tmp.out
+DIFF=$(diff tmp.out ../data/dnaDistR2.out)
+if [ "$DIFF" == "" ] 
+then
+    printf "Test(dnaDist, -r 2)\tpass\n"
+else
+    printf "Test(dnaDist, -r 2)\tfail\n"
     echo ${DIFF}
 fi
 

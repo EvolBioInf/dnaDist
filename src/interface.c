@@ -31,7 +31,7 @@ void freeArgs(Args *args) {
 
 Args *getArgs(int argc, char *argv[]) {
   int c;
-  char *optString = "hvrb:p:s:";
+  char *optString = "hvr:b:p:s:";
   Args *args = newArgs();
 
   while ((c = getopt(argc, argv, optString)) != -1) {
@@ -46,7 +46,11 @@ Args *getArgs(int argc, char *argv[]) {
       args->s = atoi(optarg);
       break;
     case 'r': /* raw distances */
-      args->r = 1;
+      args->r = atoi(optarg);
+      if(args->r < 1 || args->r > 2) {
+	fprintf(stderr, "ERROR[dnaDist]: Please use 1 or 2 as arguments for option -r.\n");
+	args->err = 1;
+      }
       break;
     case 'h': /* help       */
       args->h = 1;
@@ -81,7 +85,7 @@ void printUsage() {
   printf("\t[-b <NUM> bootstrap replicates; default: no bootstrap]\n");
   printf("\t[-p <NUM> pairwise bootstrap replicates; default: no pairwise bootstrap]\n");
   printf("\t[-s <NUM> seed for random number generator; default: system]\n");
-  printf("\t[-r raw distances; default: Jukes-Cantor]\n");
+  printf("\t[-r 1|2 raw distances as mismatches per site (1) or mismatch counts (2); default: Jukes-Cantor]\n");
   printf("\t[-h print this help message and exit]\n");
   printf("\t[-v print version & program information and exit]\n");
   exit(0);
